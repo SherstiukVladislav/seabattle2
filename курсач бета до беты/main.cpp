@@ -18,7 +18,7 @@ unsigned char monitor2[10][10];
 
 int cur_menu_pos;
 int Proverka = 0;
-
+int POBEDA ();
 class ship
 {
 public:
@@ -34,7 +34,7 @@ public:
 ship  ship[2];
 shoot shoots[2];
 
-void Draw(int playernum)//для мапы
+void Draw(int playernum)//вывод карты
 {
     if (playernum==1)
     {
@@ -84,7 +84,7 @@ void Draw(int playernum)//для мапы
     }
 }
 
-void form_ship (int plr_num)
+void form_ship (int plr_num) //форма корабля символ 254 он же квадрик
 {
     if(plr_num==1)
     {
@@ -96,7 +96,7 @@ void form_ship (int plr_num)
     }
 }
 
-void ster (int playernum)
+void ster (int playernum) //убирает след от корабля
 {
         if(playernum==1)
     {
@@ -165,8 +165,8 @@ void Input(int plr_num,int X,int Y)//нажатия пользователя
 
 void Shoots (int plr_num,int X,int Y)
 {
-    while (true)
-    {
+        Draw(plr_num);
+
         cout<<"Enter target coordinates:"<<endl;
         cin>> X ;
         cin>> Y ;
@@ -180,13 +180,34 @@ void Shoots (int plr_num,int X,int Y)
         }
         else if(plr_num==2)
         {
-            field1  [shoots[plr_num].y][shoots[plr_num].x]='X';
+            field1[shoots[plr_num].y][shoots[plr_num].x]='X';
         }
-
-    }
-
 }
-
+void play1x1()
+{
+    Draw(1);
+    Input(1, 5, 5);
+    Input(2, 5, 5);
+    while(true)
+    {
+        Shoots(1, 2, 3);
+        POBEDA ();
+        Shoots(2, 2, 3);
+        POBEDA ();
+    }
+}
+void plrvsbot()
+{
+    Draw(1);
+    Input(1, 5, 5);
+    while(true)
+    {
+        Shoots(1, 2, 3);
+        POBEDA ();
+        Shoots(2, 2, 3);
+        POBEDA ();
+    }
+}
 
 void Menu (){
     while (true){
@@ -234,18 +255,13 @@ void Menu (){
                     case 13:
                         switch (cur_menu_pos)
                         {
-                            case 1:
-                                Draw(1);
-                                Input(1, 5, 5);
-                                Input(2, 5, 5);
-                                Shoots(1, 2, 3);
+                            case 1: // игрок против игрока
+                                play1x1();
                                 break;
 
 
-                            case 2:
-                                Draw(1);
-                                Input(1, 5, 5);
-                                Shoots(1, 2, 3);
+                            case 2: //заготовка для бота
+                                plrvsbot();
                                 break;
 
 
@@ -266,18 +282,18 @@ int POBEDA ()
         {
         for(int j=0; j<12; j++)
         {
-            if (field1[j][i]=='X')
+            if ( field1[j][i] == 254 )
             {
                 Proverka++;
             }
         }
     }
-    if (Proverka==20){
+    if ( Proverka == 0 ){
         system ("cls");
         system ("color 04");
         cout << "\n\n\n\n";
         cout << "===========================================================";
-        cout << "                          Player 2 won" << endl;
+        cout << "                          Player 1 won" << endl;
         cout << "            Press any button to return to the menu" << endl;
         cout << "                          (Not Enter)" << endl;
         cout << "===========================================================";
@@ -300,12 +316,12 @@ int POBEDA ()
             }
         }
     }
-    if (Proverka==20){
+    if ( Proverka == 0 ){
         system ("cls");
         system ("color 03");
         cout << "\n\n\n\n";
         cout << "===========================================================";
-        cout << "                          Player 1 won" << endl;
+        cout << "                          Player 2 won" << endl;
         cout << "            Press any button to return to the menu" << endl;
         cout << "                          (Not Enter)" << endl;
         cout << "===========================================================";
@@ -340,6 +356,6 @@ int main()
         Input(1,2,2);//корабль 1
         Input(2,2,2);//корабль 2
         Shoots(1,2,3);
+        Shoots(2,2,3);
         POBEDA();
-
 }
