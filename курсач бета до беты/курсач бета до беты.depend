@@ -1,0 +1,11 @@
+# depslib dependency file v1.0
+1639063748 source:d:\proj\5\курсач бета до беты\main.cpp
+	<iostream>
+	<conio.h>
+	<math.h>
+	<time.h>
+	<Windows.h>
+	<iomanip>
+	<string>
+	<stdio.h>
+
