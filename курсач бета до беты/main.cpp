@@ -1,6 +1,7 @@
 #include <iostream>//1
 #include <conio.h>//2
 #include <math.h>
+#include <cmath> //3(для модуля)
 #include <time.h>
 #include <iomanip>
 #include <string>
@@ -18,6 +19,9 @@ unsigned char monitor2[10][10];
 int cur_menu_pos;
 int Proverka = 0;
 int POBEDA ();
+int distanc;
+
+
 class ship
 {
 public:
@@ -57,6 +61,7 @@ void Draw(int playernum)//вывод карты
             cout<<endl;
         }
         cout<<"=======================  ======================"<<endl;
+        cout<<"distance to ship= "<<distanc<<endl;
     }
     else if(playernum==2)
     {
@@ -80,6 +85,7 @@ void Draw(int playernum)//вывод карты
             cout<<endl;
         }
         cout<<"=======================  ======================"<<endl;
+        cout<<"distance to ship= "<<distanc<<endl;
     }
 }
 
@@ -161,7 +167,128 @@ void Input(int plr_num,int X,int Y)//нажатия пользователя
             }
         }
 }
+void Amove(int plr_num)//нажатия пользователя
+{
+    form_ship(plr_num);
+    Draw(plr_num);
+        while (true)
+        {
+        if(_kbhit())
+            switch(_getch())
+            {
+                case 'w':
+                    if(ship[plr_num].y>0)
+                        {
+                            if (plr_num==1)
+                            {
+                                if(field1[ship[plr_num].y-1][ship[plr_num].x]!='X')
+                                {
+                                    ster(plr_num);
+                                    ship[plr_num].y--;
+                                    form_ship(plr_num);
+                                    Draw(plr_num);
+                                    return;
+                                }
+                            }
+                            if (plr_num==2)
+                            {
+                                if(field2[ship[plr_num].y-1][ship[plr_num].x]!='X')
+                                {
+                                    ster(plr_num);
+                                    ship[plr_num].y--;
+                                    form_ship(plr_num);
+                                    Draw(plr_num);
+                                    return;
+                                }
+                            }
+                        }
+                    break;
 
+                case 's':
+                    if(ship[plr_num].y<9)
+                        {
+                            if (plr_num==1)
+                            {
+                                if(field1[ship[plr_num].y+1][ship[plr_num].x]!='X')
+                                {
+                                    ster(plr_num);
+                                    ship[plr_num].y++;
+                                    form_ship(plr_num);
+                                    Draw(plr_num);
+                                    return;
+                                }
+                            }
+                            if (plr_num==2)
+                            {
+                                if(field2[ship[plr_num].y+1][ship[plr_num].x]!='X')
+                                {
+                                    ster(plr_num);
+                                    ship[plr_num].y++;
+                                    form_ship(plr_num);
+                                    Draw(plr_num);
+                                    return;
+                                }
+                            }
+
+                        }
+                    break;
+                case 'a':
+                    if(ship[plr_num].x>0)
+                        {
+                            if (plr_num==1)
+                            {
+                                if(field1[ship[plr_num].y][ship[plr_num].x-1]!='X')
+                                {
+                                    ster(plr_num);
+                                    ship[plr_num].x--;
+                                    form_ship(plr_num);
+                                    Draw(plr_num);
+                                    return;
+                                }
+                            }
+                            if (plr_num==2)
+                            {
+                                if(field2[ship[plr_num].y][ship[plr_num].x-1]!='X')
+                                {
+                                    ster(plr_num);
+                                    ship[plr_num].x--;
+                                    form_ship(plr_num);
+                                    Draw(plr_num);
+                                    return;
+                                }
+                            }
+                        }
+                    break;
+                case 'd':
+                    if(ship[plr_num].x<9)
+                        {
+                            if (plr_num==1)
+                            {
+                                if(field1[ship[plr_num].y][ship[plr_num].x+1]!='X')
+                                {
+                                    ster(plr_num);
+                                    ship[plr_num].x++;
+                                    form_ship(plr_num);
+                                    Draw(plr_num);
+                                    return;
+                                }
+                            }
+                            if (plr_num==2)
+                            {
+                                if(field2[ship[plr_num].y][ship[plr_num].x+1]!='X')
+                                {
+                                    ster(plr_num);
+                                    ship[plr_num].x++;
+                                    form_ship(plr_num);
+                                    Draw(plr_num);
+                                    return;
+                                }
+                            }
+                        }
+                    break;
+            }
+        }
+}
 void Shoots (int plr_num,int X,int Y)
 {
         Draw(plr_num);
@@ -176,23 +303,48 @@ void Shoots (int plr_num,int X,int Y)
         if(plr_num==1)
         {
             field2[shoots[plr_num].y][shoots[plr_num].x]='X';
+            monitor1[shoots[plr_num].y][shoots[plr_num].x]='X';
         }
         else if(plr_num==2)
         {
             field1[shoots[plr_num].y][shoots[plr_num].x]='X';
+            monitor2[shoots[plr_num].y][shoots[plr_num].x]='X';
         }
+}
+void Manhattan(int plr_num)
+{
+    int a;
+    int b;
+
+    a=shoots[plr_num].y - ship[plr_num].y ;
+    b=shoots[plr_num].x - ship[plr_num].x ;
+
+    a=abs(a);
+    b=abs(b);
+
+    distanc=a+b;
 }
 void play1x1()
 {
     Draw(1);
     Input(1, 5, 5);
     Input(2, 5, 5);
+    Shoots(1, 2, 3);
+    Manhattan(2);
+    POBEDA();
+    Shoots(2, 2, 3);
+    Manhattan(1);
+    POBEDA();
     while(true)
     {
+        Amove(1);
         Shoots(1, 2, 3);
-        POBEDA ();
+        Manhattan(2);
+        POBEDA();
+        Amove(2);
         Shoots(2, 2, 3);
-        POBEDA ();
+        Manhattan(1);
+        POBEDA();
     }
 }
 void plrvsbot()
@@ -211,8 +363,7 @@ void plrvsbot()
 void Menu (){
     while (true){
         system ("cls");
-        cout << "\n";
-        cout << "                             Welcome to SeaBattle " << endl;//8
+        cout << "                        Welcome to SeaBattle " << endl;//8
         cout << "\n";
         if ( cur_menu_pos == 1 )
         {
@@ -274,7 +425,7 @@ void Menu (){
             }
     }
 }
-int POBEDA ()
+int POBEDA()
 {
     Proverka=0;
     for(int i=0; i<12; i++)
@@ -290,12 +441,9 @@ int POBEDA ()
     if ( Proverka == 0 ){
         system ("cls");
         system ("color 04");
-        cout << "\n\n\n\n";
-        cout << "===========================================================";
-        cout << "                          Player 1 won" << endl;
+        cout << "\n\n\n";
+        cout << "                          Player 2 won!" << endl;
         cout << "            Press any button to return to the menu" << endl;
-        cout << "                          (Not Enter)" << endl;
-        cout << "===========================================================";
         while (true){
             if ( kbhit()){
                 switch (getch()){
@@ -318,12 +466,9 @@ int POBEDA ()
     if ( Proverka == 0 ){
         system ("cls");
         system ("color 03");
-        cout << "\n\n\n\n";
-        cout << "===========================================================";
-        cout << "                          Player 2 won" << endl;
+        cout << "\n\n\n";
+        cout << "                          Player 1 won!" << endl;
         cout << "            Press any button to return to the menu" << endl;
-        cout << "                          (Not Enter)" << endl;
-        cout << "===========================================================";
         while (true){
             if ( kbhit()){
                 switch (getch()){
@@ -356,5 +501,8 @@ int main()
         Input(2,2,2);//корабль 2
         Shoots(1,2,3);
         Shoots(2,2,3);
+        Amove(1);
+        Amove(2);
+
         POBEDA();
 }
